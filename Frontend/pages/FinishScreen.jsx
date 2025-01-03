@@ -14,9 +14,7 @@ function FinishScreen() {
     currentMaze,
     mazeSize,
     difficulty,
-    setDifficulty,
     setSecondsRemaining,
-    setMiliSecondsRemaining,
     setUserName,
     setEnroll,
     setStatus,
@@ -24,13 +22,11 @@ function FinishScreen() {
   } = useGame();
 
   const [uss, setUss] = useState(null);
-  // const [points, setPoints] = useState(0);
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log("token in fron  -> ", token);
-    axios.post("http://localhost:5000/me", {
+    axios.post("http://localhost:8000/api/me", {
       token: token,
     }).then((res) => {
       console.log("->** ", res);
@@ -45,7 +41,7 @@ function FinishScreen() {
   const handleSave = () => {
     console.log("user at save ", uss, points, difficulty);
     const id = uss._id;
-    axios.post('http://localhost:5000/update', {
+    axios.post('http://localhost:8000/api/update', {
       difficulty: difficulty,
       points: points,
       id: id,
@@ -59,7 +55,7 @@ function FinishScreen() {
   };
 
   const handleLogout = () => {
-    axios.post("http://localhost:5000/logout", {
+    axios.post("http://localhost:8000/api/logout", {
       id: uss._id,
     }).then((res) => {
       localStorage.setItem("token", "");
@@ -83,7 +79,6 @@ function FinishScreen() {
   let col = currentMaze.Start[1];
 
   let points = 0;
-  // console.log("userGame ", useGame());
   for (let i = 0; i < inputString.length; i++) {
     if (
       row < 0 ||
@@ -125,17 +120,11 @@ function FinishScreen() {
     }
   }
 
-
-
-
-  let tmp = 0;
   if (Ans && currentMaze.matrix[row][col] === "🚩") {
     console.log("points -> ", "yes correct hai ");
     points += secondsRemaining * 1000;
     points += (miliSecondsRemaining);
-    // setPoints(tmp);
   } else {
-    // setPoints(0);
     points = 0;
   }
 

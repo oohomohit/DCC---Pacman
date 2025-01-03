@@ -9,7 +9,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.post("http://localhost:8000/loginUser", {
+    axios.post("http://localhost:8000/api/loginUser", {
       userName, enroll, phone
     }).then((res) => {
       console.log("->* ", res);
@@ -25,7 +25,7 @@ function LoginPage() {
       alert("Please fill all the fields");
       return;
     }
-    axios.post("http://localhost:5000/login", {
+    axios.post("http://localhost:8000/api/login", {
       userName, enroll, phone
     },
       {
@@ -63,13 +63,12 @@ function LoginPage() {
               <div className="row">
                 <div className="loginPage-imageIcon">
                   <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.v0A2yxPF5gTfSA7l_gKcDgHaF7&pid=Api&P=0&h=180"
+                    src="https://imgs.search.brave.com/bgkyyiKg8U7hQzORqygYvLImsJ3AZ1hVtwRZg-nYjvY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9wbmdp/bWcuY29tL3VwbG9h/ZHMvcGFjbWFuL3Nt/YWxsL3BhY21hbl9Q/Tkc5OC5wbmc"
                     alt="pacmanimage"
-                    // className="img-fluid"
                     style={{ borderRadius: "1rem" }}
                   />
                 </div>
-                <div className="w-100  col-md-6 col-lg-7 d-flex align-items-center  ">
+                <div className="w-100  col-md-6 col-lg-7 d-flex align-items-center">
                   <div className="card-body p-4 p-lg-5 text-black">
                     <form onSubmit={handleSubmit}>
                       <div className="d-flex align-items-center mb-3 pb-1">
@@ -80,14 +79,10 @@ function LoginPage() {
                       </div>
 
                       <h5
-                        // className="fw-normal mb-3 pb-3"
                         className=" w-full text-center"
                         style={{ fontSize: "2.5rem" }}
-
-                      // style={{ letterSpacing: "1px" }}
                       >
                         Enter Details to Play Game
-                        {/* <strong className=" flex justify-center item-center" >Enter Details to Play Game</strong> */}
                       </h5>
 
                       <label className="form-label" htmlFor="form2Example17">

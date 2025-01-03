@@ -5,66 +5,25 @@ import { ApiResponse } from "./utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
-
-
-
-// get user details from frontend
-// validation - not empty
-// check if user already exists: username, email
-// check for images, check for avatar
-// upload them to cloudinary, avatar
-// create user object - create entry in db
-// remove password and refresh token field from response
-// check for user creation
-// return res
-
 export const registerUser = asyncHandler(async (req, res) => {
-    const { } = req.body
-    //console.log("email: ", email);
-
+    const { userName, enroll, phone } = req.body
+    
     if (
-        [fullName, email, username, password].some((field) => field?.trim() === "")
+        [userName, enroll, phone].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existedUser = await User.findOne({
-        $or: [{ username }, { email }]
-    })
+    const existedUser = await User.findOne({enroll})
 
     if (existedUser) {
-        throw new ApiError(409, "User with email or username already exists")
+        throw new ApiError(409, "User with enrollment already exists")
     }
-    //console.log(req.files);
-
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    //const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
-    let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImageLocalPath = req.files.coverImage[0].path
-    }
-
-
-    if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required")
-    }
-
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
-
-    if (!avatar) {
-        throw new ApiError(400, "Avatar file is required")
-    }
-
 
     const user = await User.create({
-        fullName,
-        avatar: avatar.url,
-        coverImage: coverImage?.url || "",
-        email,
-        password,
-        username: username.toLowerCase()
+        userName,
+        enroll,
+        phone,
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -78,33 +37,18 @@ export const registerUser = asyncHandler(async (req, res) => {
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
-
 })
 
 export const loginUser = asyncHandler(async (req, res) => {
-    // req body -> data
-    // userName or enroll
-    //find the user
-    //password check
-    //access and referesh token
-    //send cookie
+    // req body : {userName, enroll @unique, phone}
 
     const { userName, phone, enroll } = req.body
-    console.log("userData at login ", userName, phone, enroll);
 
     if (phone && !enroll) {
         throw new ApiError(400, "phone or enroll is required")
     }
 
-    // Here is an alternative of above code based on logic discussed in video:
-    // if (!(userName || enroll)) {
-    //     throw new ApiError(400, "userName or enroll is required")
-
-    // }
-
-    let user = await User.findOne({
-        $or: [ { enroll }, { phone }]
-    })
+    let user = await User.findOne({ enroll });
 
     if (!user) {
         const newUser = await User.create({
@@ -113,24 +57,14 @@ export const loginUser = asyncHandler(async (req, res) => {
             enroll
         })
 
-        console.log("User created: ", newUser);
+        // console.log("User created: ", newUser);
         const createdUser = await User.findById(newUser._id).exec();
-
-
-        // const createdUser = await User.findById(user._id).select(
-        //     "-refreshToken"
-        // )
 
         if (!createdUser) {
             throw new ApiError(500, "Something went wrong while registering the user")
         }
+
         user = newUser;
-
-        // return res.status(201).json(
-        //     new ApiResponse(200, createdUser, "User registered Successfully")
-        // )
-
-        console.log("User found: ", user);
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
@@ -141,7 +75,6 @@ export const loginUser = asyncHandler(async (req, res) => {
             secure: true,
             Withcredentials: true
         }
-
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
@@ -155,21 +88,15 @@ export const loginUser = asyncHandler(async (req, res) => {
                     "User logged In Successfully"
                 )
             )
-
-
     }
     else {
         throw new ApiError(500, "You have already Played this game .");
     }
-
-
-
 })
 
 export const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         { _id: req.body.id},
-
         {
             $unset: {
                 refreshToken: 1 // this removes the field from document
@@ -313,9 +240,8 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     }
 });
 
-
 export const updateData=asyncHandler(async(req,res)=>{
-    console.log("data from frontend ", req.body);
+    console.log("data from frontend :", req.body);
     const difficulty=req.body.difficulty;
     let type="easy";
     if(difficulty===7)type="medium";
@@ -324,7 +250,7 @@ export const updateData=asyncHandler(async(req,res)=>{
     const points=req.body.points;
     const id=(req.body.id);
     console.log("type",type);
-    // console.log("data from fronted to update  ",difficulty,points,id);
+    
     const user=await User.findOneAndUpdate(
         {_id:id},
         {
@@ -344,19 +270,20 @@ export const updateData=asyncHandler(async(req,res)=>{
 
 export const leaderboard=asyncHandler(async(req,res)=>{
     const users=await User.find().exec();
+
     if(!users){
         throw new ApiError(500,"Something went wrong while fetching the leaderboard")
     }
+
     console.log("users at leaderboard ", users);
     let easyScore=[],mediumScore=[],hardScore=[];
+
     users.forEach((user)=>{
         easyScore.push({points:user.easy,username:user.userName,phone:user.phone,enroll:user.enroll});
         mediumScore.push({points:user.medium,username:user.userName,phone:user.phone,enroll:user.enroll});
         hardScore.push({points:user.hard,username:user.userName,phone:user.phone,enroll:user.enroll});
     });
-    // easyScore.sort((a,b)=>a.points<=b.points);
-    // mediumScore.sort((a,b)=>a.points<=b.points);
-    // hardScore.sort((a,b)=>a.points<=b.points);
+
     return res.status(200).json(new ApiResponse(200,{easyScore,mediumScore,hardScore},"Leaderboard fetched successfully"))
 });
 

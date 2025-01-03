@@ -5,22 +5,15 @@ const userSchema = new Schema(
         userName: {
             type: String,
             required: true,
-            lowercase: true,
-            trim: true,
-            index: true
         },
         enroll: {
             type: String,
             required: true,
             unique: true,
-            trim: true,
-            index: true
         },
         phone: {
             type: String,
             required: true,
-            trim: true,
-            index: true
         },
         easy: {
             type: Number,
@@ -35,7 +28,6 @@ const userSchema = new Schema(
             default: null
         },
     },
-
     {
         timestamps: true
     }
@@ -67,7 +59,6 @@ userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-
         },
         process.env.REFRESH_TOKEN_SECRET||"dksdjdj333442234nfhf850ewndsnodsnd",
         {

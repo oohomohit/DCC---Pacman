@@ -21,8 +21,6 @@ function LeaderBoard() {
     setReady(true);
   }, []);
 
-  // const { LeaderBoard } = useGame();
-
   if (!ready) {
     return <div>Loading...</div>;
   }
