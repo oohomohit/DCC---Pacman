@@ -1,6 +1,6 @@
 # DCC---Pacman
 
-![Pacman Banner](./image.png)
+![Pacman Banner](./pacman(1080x1080px).png)
 
 ## Overview
 DCC---Pacman is an engaging and interactive implementation of the classic Pacman game. This project is tailored for participants to test their skills and strategies while navigating Pacman through various challenges.
