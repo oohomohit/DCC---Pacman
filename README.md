@@ -12,6 +12,7 @@ DCC---Pacman is an engaging and interactive implementation of the classic Pacman
 - Memorize and input the path to guide Pacman.
 - Multiple slots participation with unique time slots.
 - Adheres to strict rules for fair play.
+- **Link to Rulebook**: [RULEBOOK](https://drive.google.com/file/d/1dDWqcsoSb2fG08UHaoaJ6Xop6xaR9BlZ/view?usp=sharing)
 
 ## Getting Started
 
