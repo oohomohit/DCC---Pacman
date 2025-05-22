@@ -1,0 +1,53 @@
+{
+  "EasyLeaderBoard": [
+    {
+      "username": "Vidya Sagar",
+      "enroll": "21UCS108",
+      "score": 98
+    },
+    {
+      "username": "Mohit",
+      "enroll": "21UCS109",
+      "score": 89
+    },
+    {
+      "username": "Govind",
+      "enroll": "21UCS087",
+      "score": 99
+    },
+    {
+      "username": "Chetan",
+      "enroll": "21UCS123",
+      "score": 99
+    }
+  ],
+  "MediumLeaderBoard": [
+    {
+      "username": "Vidya Sagar",
+      "enroll": "21UCS108",
+      "score": 95
+    },
+    {
+      "username": "Mohit",
+      "enroll": "21UCS109",
+      "score": 79
+    },
+    {
+      "username": "Govind",
+      "enroll": "21UCS087",
+      "score": 85
+    }
+  ],
+  "HardLeaderBoard": [
+    {
+      "username": "Vidya Sagar",
+      "enroll": "21UCS108",
+      "score": 76
+    },
+    {
+      "username": "Mohit",
+      "enroll": "21UCS109",
+      "score": 98
+    }
+  ]
+}
